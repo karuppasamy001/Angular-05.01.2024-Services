@@ -1,0 +1,19 @@
+<div>
+    <h2>CONFIRM YOUR BOOKING</h2>
+</div>
+
+<div>
+
+    Name : <input type="text" name="name" placeholder="Your Name" [(ngModel)]="name" ><br />
+    PhoneNumber : <input type="number" name="phoneNumber" placeholder="Your PhoneNumber" [(ngModel)]="phoneNumber"><br><br>
+    Book Your Dates <br>
+    from <input type="date" [(ngModel)]="startDate"> to <input type="date" [(ngModel)]="endDate"> <br>
+    <input type="submit" (click)="confirmBooking()">
+
+</div>
+
+
+<div *ngIf="billing">
+    <h3>Your Total Bill is {{TotalAmount | currency : 'INR'}}</h3>
+    <button (click)="addToBookingDetails()"> click to Confirm booking </button>
+</div>
