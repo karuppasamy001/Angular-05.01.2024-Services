@@ -7,7 +7,7 @@ import { BookingDetails, Rooms } from './interface';
 export class HotelsService {
 
 
-  currentBooking!: number
+  currentBooking: number = 0
 
   bookingDetails: { [key: string] : BookingDetails } = {};
 

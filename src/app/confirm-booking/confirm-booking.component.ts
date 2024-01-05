@@ -19,6 +19,12 @@ export class ConfirmBookingComponent {
   billing: boolean = false;
 
   confirmBooking() {
+    if (this.hotel.currentBooking === 0) {
+      alert('Wrong Path');
+      this.route.navigate(['/']);
+      return;
+    }
+
     if (this.name === '') {
       alert('Please Enter the Name');
       return;
@@ -47,18 +53,38 @@ export class ConfirmBookingComponent {
       let diffDays = Math.round((end.getTime() - start.getTime()) / singleDay);
 
       if (diffDays < 0) {
-        alert('Please Select Proper Date');
+        alert('Your Start Date and End Date is not valid');
         return;
       }
 
-      this.TotalAmount = this.calculatePrice(diffDays)
-      this.billing = true
+      if(!this.roomsAvailable(start, end, this.hotel.currentBooking)){
+        alert("At your Dates the Selected Room is Already Booked Please Select Different Rooms or Please Select Different Dates Thanks")
+        this.route.navigate(['/Rooms'])
+        return
+      }
+
+      this.TotalAmount = this.calculatePrice(diffDays);
+      this.billing = true;
     }
 
-
-    
-
     this.addToBookingDetails();
+  }
+
+  roomsAvailable(startDate: Date, endDate: Date, roomNo: number): boolean{
+    if(Object.values(this.hotel.bookingDetails).length === 0) return true
+
+
+    for(let i in this.hotel.bookingDetails){
+      if(this.hotel.bookingDetails[i].roomNo === roomNo){
+        if((startDate < this.hotel.bookingDetails[i].startDate && endDate < this.hotel.bookingDetails[i].startDate) || (startDate > this.hotel.bookingDetails[i].endDate &&  endDate > this.hotel.bookingDetails[i].endDate) ){
+          continue
+        }else{
+          return false
+        }
+      }
+    }
+
+    return true
   }
 
   calculatePrice(days: number) {
@@ -70,7 +96,7 @@ export class ConfirmBookingComponent {
       }
     }
 
-    return 0
+    return 0;
   }
 
   addToBookingDetails() {
@@ -91,7 +117,8 @@ export class ConfirmBookingComponent {
     this.hotel.bookingDetails[index] = booking;
 
     console.log(this.hotel.bookingDetails);
+    this.hotel.currentBooking = 0;
 
-    this.route.navigate(['/Bookings'])
+    this.route.navigate(['/Bookings']);
   }
 }
